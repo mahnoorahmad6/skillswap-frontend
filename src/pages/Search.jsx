@@ -5,14 +5,10 @@ function Search() {
   const users = useSelector((state) => state.user.users);
   const [query, setQuery] = useState("");
 
-  // filter users based on skill
   const filteredUsers = users.filter((user) => {
     const search = query.toLowerCase();
 
     return (
-      user.teachSkills.some((skill) =>
-        skill.toLowerCase().includes(search)
-      ) ||
       user.learnSkills.some((skill) =>
         skill.toLowerCase().includes(search)
       )
@@ -40,10 +36,6 @@ function Search() {
             {user.teachSkills.join(", ") || "None"}
           </p>
 
-          <p>
-            <strong>Wants to learn:</strong>{" "}
-            {user.learnSkills.join(", ") || "None"}
-          </p>
         </div>
         
       ))}
