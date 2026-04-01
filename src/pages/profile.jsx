@@ -4,6 +4,8 @@ import {
   addLearnSkill,
   removeTeachSkill,
   removeLearnSkill,
+  rejectRequest,
+  acceptRequest
 } from "../features/user/userSlice";
 import { useState } from "react";
 
@@ -115,9 +117,23 @@ function Profile() {
                 ✕
               </button>
             </div>
+            
           ))}
         </div>
+        
       </div>
+      {currentUser.incomingRequests.map(email => (
+  <div key={email}>
+    <span>{email} wants to connect</span>
+    <button onClick={() => dispatch(acceptRequest(email))}>Accept</button>
+    <button onClick={() => dispatch(rejectRequest(email))}>Reject</button>
+  </div>
+))}
+<ul>
+  {currentUser.connections.map(email => (
+    <li key={email}>{email}</li>
+  ))}
+</ul>
     </div>
   );
 }

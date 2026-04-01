@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import {sendRequest} from "../features/user/userSlice"
 function UserProfile() {
   const { email } = useParams();
   const users = useSelector((state) => state.user.users);
-
+  const currentUser= useSelector((state) => state.user.currentUser);
   const user = users.find((u) => u.email === email);
 
   if (!user) return <p>User not found</p>;
@@ -22,6 +22,13 @@ function UserProfile() {
         <strong>Wants to Learn:</strong>{" "}
         {user.learnSkills.join(", ") || "None"}
       </p>
+        <button
+          onClick={() => dispatch(sendRequest(user.email))}
+          disabled={currentUser.connections.includes(user.email)}
+        >
+          Send Request
+        </button>
+      
     </div>
   );
 }
