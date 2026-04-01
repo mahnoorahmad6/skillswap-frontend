@@ -122,8 +122,8 @@ sendRequest: (state, action) => {
   ) return;
 
   // Add request
-  recipient.incomingRequests.push(state.currentUser.email);
-  state.currentUser.outgoingRequests.push(recipientEmail);
+  recipient.requestsReceived.push(state.currentUser.email);
+  state.currentUser.requestsSent.push(recipientEmail);
 },
 
 acceptRequest: (state, action) => {
@@ -136,8 +136,8 @@ acceptRequest: (state, action) => {
   const sender = state.users[senderIndex];
 
   // Remove pending requests
-  state.currentUser.incomingRequests = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
-  sender.outgoingRequests = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
+  state.currentUser.requestsReceived = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
+  sender.requestsSent = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
 
   // Add to connections
   state.currentUser.connections.push(senderEmail);
@@ -154,8 +154,8 @@ rejectRequest: (state, action) => {
   const sender = state.users[senderIndex];
 
   // Remove pending requests only
-  state.currentUser.incomingRequests = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
-  sender.outgoingRequests = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
+  state.currentUser.requestsSent = state.currentUser.requestsSent.filter(e => e !== senderEmail);
+  sender.requestsSent = sender.requestsSent.filter(e => e !== state.currentUser.email);
 },
 
 
