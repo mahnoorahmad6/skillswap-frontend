@@ -6,6 +6,7 @@ import ChangePassword from "./pages/ChangePassword";
 import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
 import Search from "./pages/Search";
+import UserProfile from "./pages/UserProfile";
 
 
 function App() {

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 function Profile() {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user.currentUser);
+  const currentUser  = useSelector((state) => state.user.currentUser);
   if (!currentUser)
   {
      return <p>Please log in to see your profile</p>;

@@ -38,7 +38,7 @@ const userSlice = createSlice({
       
     },
 
-    addTeachSkill: (state, action) => {
+     addTeachSkill: (state, action) => {
       if (!state.currentUser) return;
 
       const skill = action.payload;
