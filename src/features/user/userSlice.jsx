@@ -14,6 +14,9 @@ const userSlice = createSlice({
         ...action.payload,
         teachSkills: [],
         learnSkills: [],
+        requestsSent:[],
+        requestsReceived:[],
+        connections:[]
       };
       state.users.push(newUser);
       state.currentUser = newUser;
@@ -97,6 +100,64 @@ const userSlice = createSlice({
       state.users[index].learnSkills =
         state.users[index].learnSkills.filter((s) => s !== skill);
     },
+
+sendRequest: (state, action) => {
+  if (!state.currentUser) return;
+
+  const recipientEmail = action.payload;
+
+  // cannot send request to yourself
+  if (recipientEmail === state.currentUser.email) return;
+
+  const recipientIndex = state.users.findIndex(u => u.email === recipientEmail);
+  if (recipientIndex === -1) return;
+
+  const recipient = state.users[recipientIndex];
+
+  // prevent duplicate requests
+  if (
+    recipient.incomingRequests.includes(state.currentUser.email) ||
+    state.currentUser.outgoingRequests.includes(recipientEmail) ||
+    recipient.connections.includes(state.currentUser.email)
+  ) return;
+
+  // Add request
+  recipient.incomingRequests.push(state.currentUser.email);
+  state.currentUser.outgoingRequests.push(recipientEmail);
+},
+
+acceptRequest: (state, action) => {
+  const senderEmail = action.payload;
+  if (!state.currentUser) return;
+
+  const senderIndex = state.users.findIndex(u => u.email === senderEmail);
+  if (senderIndex === -1) return;
+
+  const sender = state.users[senderIndex];
+
+  // Remove pending requests
+  state.currentUser.incomingRequests = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
+  sender.outgoingRequests = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
+
+  // Add to connections
+  state.currentUser.connections.push(senderEmail);
+  sender.connections.push(state.currentUser.email);
+},
+
+rejectRequest: (state, action) => {
+  const senderEmail = action.payload;
+  if (!state.currentUser) return;
+
+  const senderIndex = state.users.findIndex(u => u.email === senderEmail);
+  if (senderIndex === -1) return;
+
+  const sender = state.users[senderIndex];
+
+  // Remove pending requests only
+  state.currentUser.incomingRequests = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
+  sender.outgoingRequests = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
+},
+
 
     changePassword: (state, action) => {
       const { email, newPassword } = action.payload;
