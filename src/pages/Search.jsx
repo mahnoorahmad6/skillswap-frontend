@@ -29,6 +29,7 @@ function Search() {
 
       {filteredUsers.map((user, index) => (
         <div key={index} className="border p-3 mb-3 rounded">
+          onClick={() => navigate(`/user/${user.email}`)}
           <h2 className="font-bold">{user.name}</h2>
 
           <p>
