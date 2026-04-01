@@ -122,16 +122,16 @@ function Profile() {
         </div>
         
       </div>
-      {currentUser.incomingRequests.map(email => (
-  <div key={email}>
-    <span>{email} wants to connect</span>
-    <button onClick={() => dispatch(acceptRequest(email))}>Accept</button>
-    <button onClick={() => dispatch(rejectRequest(email))}>Reject</button>
+      {currentUser.requestsReceived.map(req=> (
+  <div key={req.email}>
+    <span>{req.name} wants to connect</span>
+    <button onClick={() => dispatch(acceptRequest(req.email))}>Accept</button>
+    <button onClick={() => dispatch(rejectRequest(req.email))}>Reject</button>
   </div>
 ))}
 <ul>
-  {currentUser.connections.map(email => (
-    <li key={email}>{email}</li>
+  {currentUser.connections.map(req=> (
+    <li key={req.name}>{req.name}</li>
   ))}
 </ul>
     </div>

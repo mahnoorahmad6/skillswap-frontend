@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import {sendRequest} from "../features/user/userSlice"
 function UserProfile() {
   const { email } = useParams();
   const users = useSelector((state) => state.user.users);
   const currentUser= useSelector((state) => state.user.currentUser);
   const user = users.find((u) => u.email === email);
+    const dispatch = useDispatch();
 
   if (!user) return <p>User not found</p>;
 

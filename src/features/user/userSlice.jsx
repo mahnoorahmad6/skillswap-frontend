@@ -116,14 +116,15 @@ sendRequest: (state, action) => {
 
   // prevent duplicate requests
   if (
-    recipient.incomingRequests.includes(state.currentUser.email) ||
-    state.currentUser.outgoingRequests.includes(recipientEmail) ||
+    recipient.requestsReceived.includes(state.currentUser.email) ||
+    state.currentUser.requestsSent.includes(recipientEmail) ||
     recipient.connections.includes(state.currentUser.email)
   ) return;
 
   // Add request
-  recipient.requestsReceived.push(state.currentUser.email);
-  state.currentUser.requestsSent.push(recipientEmail);
+  recipient.requestsReceived.push({email:state.currentUser.email,mame:state.currentUser.name});
+  state.currentUser.requestsSent.push( {email: recipient.email,
+  name: recipient.name});
 },
 
 acceptRequest: (state, action) => {
@@ -136,8 +137,8 @@ acceptRequest: (state, action) => {
   const sender = state.users[senderIndex];
 
   // Remove pending requests
-  state.currentUser.requestsReceived = state.currentUser.incomingRequests.filter(e => e !== senderEmail);
-  sender.requestsSent = sender.outgoingRequests.filter(e => e !== state.currentUser.email);
+  state.currentUser.requestsReceived = state.currentUser.requestsReceived.filter(e => e !== senderEmail);
+  sender.requestsSent = sender.requestsSent.filter(e => e !== state.currentUser.email);
 
   // Add to connections
   state.currentUser.connections.push(senderEmail);
@@ -179,6 +180,9 @@ export const {
   removeTeachSkill,
   addLearnSkill,
   removeLearnSkill,
+  acceptRequest,
+  sendRequest,
+  rejectRequest,
   changePassword,
 } = userSlice.actions;
 
