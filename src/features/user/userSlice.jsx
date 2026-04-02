@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   users: [],
   currentUser: null,
 };
-
+const navigate=useNavigate()
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -18,6 +19,17 @@ const userSlice = createSlice({
         requestsReceived:[],
         connections:[]
       };
+      const email=action.payload.email
+      const existingUser = state.users.find(
+    (u) => u.email === email
+  );
+
+  if (existingUser) {
+    alert("Email already registered");
+    navigate("/register")
+    return;
+  }
+
       state.users.push(newUser);
       state.currentUser = newUser;
     },
@@ -122,7 +134,7 @@ sendRequest: (state, action) => {
   ) return;
 
   // Add request
-  recipient.requestsReceived.push({email:state.currentUser.email,mame:state.currentUser.name});
+  recipient.requestsReceived.push({email:state.currentUser.email,name:state.currentUser.name});
   state.currentUser.requestsSent.push( {email: recipient.email,
   name: recipient.name});
 },
@@ -137,12 +149,12 @@ acceptRequest: (state, action) => {
   const sender = state.users[senderIndex];
 
   // Remove pending requests
-  state.currentUser.requestsReceived = state.currentUser.requestsReceived.filter(e => e !== senderEmail);
-  sender.requestsSent = sender.requestsSent.filter(e => e !== state.currentUser.email);
+  state.currentUser.requestsReceived = state.currentUser.requestsReceived.filter(e => e.email !== sender.email);
+  sender.requestsSent = sender.requestsSent.filter(e => e.email !== state.currentUser.email);
 
   // Add to connections
-  state.currentUser.connections.push(senderEmail);
-  sender.connections.push(state.currentUser.email);
+  state.currentUser.connections.push({email:sender.email,name:sender.name});
+  sender.connections.push({email:state.currentUser.email,name:state.currentUser.name});
 },
 
 rejectRequest: (state, action) => {
@@ -155,8 +167,8 @@ rejectRequest: (state, action) => {
   const sender = state.users[senderIndex];
 
   // Remove pending requests only
-  state.currentUser.requestsSent = state.currentUser.requestsSent.filter(e => e !== senderEmail);
-  sender.requestsSent = sender.requestsSent.filter(e => e !== state.currentUser.email);
+  state.currentUser.requestsSent = state.currentUser.requestsSent.filter(e => e.email !== sender.email);
+  sender.requestsSent = sender.requestsSent.filter(e => e.email !== state.currentUser.email);
 },
 
 

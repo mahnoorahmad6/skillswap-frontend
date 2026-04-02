@@ -7,7 +7,13 @@ function UserProfile() {
   const currentUser= useSelector((state) => state.user.currentUser);
   const user = users.find((u) => u.email === email);
     const dispatch = useDispatch();
+const isConnected = currentUser.connections.some(
+  (c) => c.email === user.email
+);
 
+const isPending = currentUser.requestsSent.some(
+  (r) => r.email === user.email
+);
   if (!user) return <p>User not found</p>;
 
   return (
@@ -23,13 +29,16 @@ function UserProfile() {
         <strong>Wants to Learn:</strong>{" "}
         {user.learnSkills.join(", ") || "None"}
       </p>
-        <button
-          onClick={() => dispatch(sendRequest(user.email))}
-          disabled={currentUser.connections.includes(user.email)}
-        >
-          Send Request
-        </button>
-      
+       
+      {isConnected ? (
+  <button disabled>Connected</button>
+) : isPending ? (
+  <button disabled>Pending</button>
+) : (
+  <button onClick={() => dispatch(sendRequest(user.email))}>
+    Send Request
+  </button>
+)}
     </div>
   );
 }
