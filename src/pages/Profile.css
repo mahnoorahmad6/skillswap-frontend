@@ -1,0 +1,119 @@
+/* Layout Tweaks */
+.profile-manage-card {
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.section-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #a0aec0;
+  letter-spacing: 0.05em;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* Input Styles */
+.skill-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.skill-input-group input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.add-btn {
+  padding: 0 20px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.teach-add { background: #4f46e5; }
+.learn-add { background: #10b981; }
+.add-btn:hover { opacity: 0.9; }
+
+/* Tag Styles */
+.skill-tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tag button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.teach-tag-removable { background: #eff6ff; color: #1e40af; }
+.learn-tag-removable { background: #ecfdf5; color: #065f46; }
+
+/* Sidebar & Requests */
+.sidebar-card { flex-direction: column; align-items: stretch; }
+
+.request-item {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 12px 0;
+}
+
+.req-name { font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 8px; }
+
+.req-actions { display: flex; gap: 8px; }
+
+.accept-btn, .reject-btn {
+  flex: 1;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.accept-btn { background: #dcfce7; color: #166534; }
+.reject-btn { background: #fee2e2; color: #991b1b; }
+
+.connections-list { list-style: none; padding: 0; margin: 0; }
+
+.conn-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.conn-avatar {
+  width: 30px; height: 30px;
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: #64748b;
+}
+
+.empty-text { color: #a0aec0; font-size: 0.85rem; font-style: italic; }

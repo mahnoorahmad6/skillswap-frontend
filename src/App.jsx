@@ -12,7 +12,6 @@ import About from "./pages/About";
 function App() {
   return (
     <BrowserRouter>
-    <Navbar />
       <Routes>
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
