@@ -5,13 +5,14 @@ const initialState = {
   users: [],
   currentUser: null,
 };
-const navigate=useNavigate()
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     registerUser: (state, action) => {
       const newUser = {
+        
         ...action.payload,
         teachSkills: [],
         learnSkills: [],
@@ -25,6 +26,7 @@ const userSlice = createSlice({
   );
 
   if (existingUser) {
+    const navigate=useNavigate()
     alert("Email already registered");
     navigate("/register")
     return;

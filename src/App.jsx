@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
 import Search from "./pages/Search";
 import UserProfile from "./pages/UserProfile";
-
+import About from "./pages/About";
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
     <Navbar />
       <Routes>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/about" element={<About />} />
          <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/change-password" element={<ChangePassword />} />
