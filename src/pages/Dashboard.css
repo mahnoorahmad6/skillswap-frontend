@@ -1,0 +1,120 @@
+/* Container Layout */
+.dashboard-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Header & Typography */
+.dashboard-header {
+  margin-bottom: 40px;
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a202c;
+  margin-bottom: 15px;
+}
+
+/* User Alerts */
+.user-welcome {
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+.user-name {
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+.auth-alert {
+  display: inline-block;
+  padding: 8px 20px;
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+/* Grid System */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Styling */
+.card {
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  overflow: hidden;
+}
+
+.card-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+}
+
+.card-primary:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.5);
+}
+
+.card-secondary {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  color: #2d3748;
+  align-items: center;
+}
+
+.card-secondary:hover {
+  border-color: #cbd5e0;
+  background-color: #f7fafc;
+  transform: translateX(5px);
+}
+
+.secondary-actions {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card Content Details */
+.card-icon {
+  font-size: 1.5rem;
+  margin-right: 15px;
+  background: #edf2f7;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.card-text h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.card-text p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #718096;
+}
