@@ -1,38 +1,52 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./Dashboard.css"; // Make sure to create this file
 
 function Dashboard() {
   const user = useSelector((state) => state.user.currentUser);
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Skill Swap: swap your skills away!</h1>
+      <header className="dashboard-header">
+        <h1 className="dashboard-title">Campus Ride Sharing</h1>
+        
+        {user ? (
+          <div className="user-welcome">
+            Welcome back, <span className="user-name">{user.name}</span>!
+          </div>
+        ) : (
+          <div className="auth-alert">
+            Please login to continue
+          </div>
+        )}
+      </header>
 
-      {user ? (
-        <p className="text-lg font-medium text-gray-600">
-          Welcome back, <span className="text-indigo-600 font-bold">{user.name}</span>!
-        </p>
-      ) : (
-        <p className="text-lg font-semibold text-red-500 bg-red-50 px-4 py-1 rounded-full border border-red-100">
-          Please login to continue
-        </p>
-      )}
+      <div className="dashboard-grid">
+        <Link to="/profile" className="card card-primary">
+          <div className="card-content">
+            <h2>Go to Profile</h2>
+            <p>Manage your account and ride details</p>
+          </div>
+        </Link>
 
-      <Link to="/profile">
-        <button className="w-full h-32 rounded-2xl font-bold text-xl text-white shadow-[0_10px_20px_-5px_rgba(59,130,246,0.4)] bg-gradient-to-br from-blue-500 to-blue-700 hover:scale-[1.03] transition-all duration-300">
-          Go to Profile
-        </button>
-      </Link>
+        <div className="secondary-actions">
+          <Link to="/search" className="card card-secondary">
+            <div className="card-icon">🔍</div>
+            <div className="card-text">
+              <h3>Search Skills</h3>
+              <p>Find what you need</p>
+            </div>
+          </Link>
 
-      <Link to="/change-password">
-        <button className="w-full py-3 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 hover:shadow-lg transition">
-          Change Password
-        </button>
-      </Link>
-
-
-      <Link to="/search">
-  <button>Search Skills</button></Link>
+          <Link to="/change-password" title="Security" className="card card-secondary">
+            <div className="card-icon">🔑</div>
+            <div className="card-text">
+              <h3>Security</h3>
+              <p>Update password</p>
+            </div>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
