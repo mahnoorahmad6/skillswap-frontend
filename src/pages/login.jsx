@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/user/userSlice";
+import { loginUser} from "../features/user/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./login.css"; // Reuse or mirror Register.css styles
@@ -13,7 +13,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    dispatch(loginUser({ email, password }));
   };
 
   useEffect(() => {

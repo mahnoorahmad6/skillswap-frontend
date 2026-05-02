@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/user/userSlice"; 
+import { logoutUser } from "../features/user/userSlice"; 
 import './Navbar.css'; 
 
 function Navbar() {
@@ -11,7 +11,7 @@ function Navbar() {
 
   const handleLogout = () => {
     // 1. Clear Redux state
-     dispatch(logout()); 
+     dispatch(logoutUser()); 
     
     // 2. Redirect to Homepage
     navigate("/");

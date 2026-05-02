@@ -1,72 +1,86 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
+import {
+  createSlice,
+  createAsyncThunk
+} from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   users: [],
-  currentUser: null,
+  currentUser: null
 };
+
+export const registerUser = createAsyncThunk(
+  "user/registerUser",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+        "Registration failed"
+      );
+    }
+  }
+);
+
+
+
+export const loginUser = createAsyncThunk(
+  "user/loginUser",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+        "Login failed"
+      );
+    }
+  }
+);
+
+
+export const logoutUser = createAsyncThunk(
+  "user/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/logout"
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Logout failed"
+      );
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState,
+
   reducers: {
-    registerUser: (state, action) => {
-      const newUser = {
-        
-        ...action.payload,
-        teachSkills: [],
-        learnSkills: [],
-        requestsSent:[],
-        requestsReceived:[],
-        connections:[]
-      };
-      const email=action.payload.email
-      const existingUser = state.users.find(
-    (u) => u.email === email
-  );
 
-  if (existingUser) {
-    const navigate=useNavigate()
-    alert("Email already registered");
-    navigate("/register")
-    return;
-  }
-
-      state.users.push(newUser);
-      state.currentUser = newUser;
-    },
-
-    login: (state, action) => {
-      const user = state.users.find(
-        (u) =>
-          u.email === action.payload.email &&
-          u.password === action.payload.password
-      );
-
-      if (user) {
-        state.currentUser = user;
-      } else {
-        alert("Invalid email or password");
-      }
-    },
-
-    logout: (state) => {
-      state.currentUser = null;
-      
-    },
-
-     addTeachSkill: (state, action) => {
+    addTeachSkill: (state, action) => {
       if (!state.currentUser) return;
 
       const skill = action.payload;
 
       if (!state.currentUser.teachSkills.includes(skill)) {
         state.currentUser.teachSkills.push(skill);
-
-        const index = state.users.findIndex(
-          (u) => u.email === state.currentUser.email
-        );
-        state.users[index].teachSkills.push(skill);
       }
     },
 
@@ -76,13 +90,9 @@ const userSlice = createSlice({
       const skill = action.payload;
 
       state.currentUser.teachSkills =
-        state.currentUser.teachSkills.filter((s) => s !== skill);
-
-      const index = state.users.findIndex(
-        (u) => u.email === state.currentUser.email
-      );
-      state.users[index].teachSkills =
-        state.users[index].teachSkills.filter((s) => s !== skill);
+        state.currentUser.teachSkills.filter(
+          (s) => s !== skill
+        );
     },
 
     addLearnSkill: (state, action) => {
@@ -92,11 +102,6 @@ const userSlice = createSlice({
 
       if (!state.currentUser.learnSkills.includes(skill)) {
         state.currentUser.learnSkills.push(skill);
-
-        const index = state.users.findIndex(
-          (u) => u.email === state.currentUser.email
-        );
-        state.users[index].learnSkills.push(skill);
       }
     },
 
@@ -106,90 +111,108 @@ const userSlice = createSlice({
       const skill = action.payload;
 
       state.currentUser.learnSkills =
-        state.currentUser.learnSkills.filter((s) => s !== skill);
-
-      const index = state.users.findIndex(
-        (u) => u.email === state.currentUser.email
-      );
-      state.users[index].learnSkills =
-        state.users[index].learnSkills.filter((s) => s !== skill);
+        state.currentUser.learnSkills.filter(
+          (s) => s !== skill
+        );
     },
 
-sendRequest: (state, action) => {
-  if (!state.currentUser) return;
+    sendRequest: (state, action) => {
+      console.log("Request sent");
+    },
 
-  const recipientEmail = action.payload;
+    acceptRequest: (state, action) => {
+      console.log("Request accepted");
+    },
 
-  // cannot send request to yourself
-  if (recipientEmail === state.currentUser.email) return;
-
-  const recipientIndex = state.users.findIndex(u => u.email === recipientEmail);
-  if (recipientIndex === -1) return;
-
-  const recipient = state.users[recipientIndex];
-
-  // prevent duplicate requests
-  if (
-    recipient.requestsReceived.includes(state.currentUser.email) ||
-    state.currentUser.requestsSent.includes(recipientEmail) ||
-    recipient.connections.includes(state.currentUser.email)
-  ) return;
-
-  // Add request
-  recipient.requestsReceived.push({email:state.currentUser.email,name:state.currentUser.name});
-  state.currentUser.requestsSent.push( {email: recipient.email,
-  name: recipient.name});
-},
-
-acceptRequest: (state, action) => {
-  const senderEmail = action.payload;
-  if (!state.currentUser) return;
-
-  const senderIndex = state.users.findIndex(u => u.email === senderEmail);
-  if (senderIndex === -1) return;
-
-  const sender = state.users[senderIndex];
-
-  // Remove pending requests
-  state.currentUser.requestsReceived = state.currentUser.requestsReceived.filter(e => e.email !== sender.email);
-  sender.requestsSent = sender.requestsSent.filter(e => e.email !== state.currentUser.email);
-
-  // Add to connections
-  state.currentUser.connections.push({email:sender.email,name:sender.name});
-  sender.connections.push({email:state.currentUser.email,name:state.currentUser.name});
-},
-
-rejectRequest: (state, action) => {
-  const senderEmail = action.payload;
-  if (!state.currentUser) return;
-
-  const senderIndex = state.users.findIndex(u => u.email === senderEmail);
-  if (senderIndex === -1) return;
-
-  const sender = state.users[senderIndex];
-
-  // Remove pending requests only
-  state.currentUser.requestsSent = state.currentUser.requestsSent.filter(e => e.email !== sender.email);
-  sender.requestsSent = sender.requestsSent.filter(e => e.email !== state.currentUser.email);
-},
-
+    rejectRequest: (state, action) => {
+      console.log("Request rejected");
+    },
 
     changePassword: (state, action) => {
-      const { email, newPassword } = action.payload;
+      const { email, newPassword } =
+        action.payload;
 
-      const user = state.users.find((u) => u.email === email);
+      const user = state.users.find(
+        (u) => u.email === email
+      );
 
       if (user) {
         user.password = newPassword;
       }
-    },
+    }
   },
+
+  // THIS GOES OUTSIDE reducers
+  extraReducers: (builder) => {
+    builder.addCase(
+      registerUser.fulfilled,
+      (state, action) => {
+        console.log(action.payload);
+
+        state.currentUser =
+          action.payload.user;
+
+        state.users.push(
+          action.payload.user
+        );
+      }
+    );
+
+    builder.addCase(
+      registerUser.rejected,
+      (state, action) => {
+        console.log(
+          "Registration failed:",
+          action.payload
+        );
+      }
+    );
+
+
+    // LOGIN
+  builder.addCase(
+    loginUser.pending,
+    (state) => {
+      state.loading = true;
+    }
+  );
+
+  builder.addCase(
+    loginUser.fulfilled,
+    (state, action) => {
+      state.loading = false;
+      state.currentUser = action.payload.user;
+
+      // if backend sends token
+      localStorage.setItem(
+        "token",
+        action.payload.token
+      );
+    }
+  );
+
+  builder.addCase(
+    loginUser.rejected,
+    (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    }
+  );
+
+
+  // LOGOUT
+  builder.addCase(
+    logoutUser.fulfilled,
+    (state) => {
+      state.currentUser = null;
+      localStorage.removeItem("token");
+    }
+  );
+  }
 });
 
 export const {
-  registerUser,
-  login,
-  logout,
+
   addTeachSkill,
   removeTeachSkill,
   addLearnSkill,
@@ -197,7 +220,7 @@ export const {
   acceptRequest,
   sendRequest,
   rejectRequest,
-  changePassword,
+  changePassword
 } = userSlice.actions;
 
 export default userSlice.reducer;

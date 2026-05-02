@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../features/user/userSlice";
 import { useNavigate, Link } from "react-router-dom";
-import "./register.css"; // The new CSS file
+import "./register.css";
 
 function Register() {
   const dispatch = useDispatch();
@@ -14,6 +14,8 @@ function Register() {
     password: ""
   });
 
+  const [error, setError] = useState("");
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -21,10 +23,23 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerUser(form));
-    navigate("/login");
+
+    try {
+      await dispatch(registerUser(form)).unwrap();
+
+      setForm({
+        name: "",
+        email: "",
+        password: ""
+      });
+
+      navigate("/login");
+
+    } catch (err) {
+      setError(err || "Registration failed");
+    }
   };
 
   return (
@@ -32,16 +47,20 @@ function Register() {
       <div className="auth-card">
         <header className="auth-header">
           <h1 className="auth-title">Get Started</h1>
-          <p className="auth-subtitle">Join the SkillSwap community today.</p>
+          <p className="auth-subtitle">
+            Join the SkillSwap community today.
+          </p>
         </header>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          
           <div className="input-group">
             <label>Full Name</label>
             <input
               name="name"
               type="text"
               placeholder="Enter your name"
+              value={form.name}
               onChange={handleChange}
               required
             />
@@ -53,6 +72,7 @@ function Register() {
               name="email"
               type="email"
               placeholder="name@university.edu"
+              value={form.email}
               onChange={handleChange}
               required
             />
@@ -71,13 +91,22 @@ function Register() {
             />
           </div>
 
+          {error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )}
+
           <button type="submit" className="auth-submit-btn">
             Create Account
           </button>
         </form>
 
         <footer className="auth-footer">
-          <p>Already have an account? <Link to="/login">Sign In</Link></p>
+          <p>
+            Already have an account? 
+            <Link to="/login"> Sign In</Link>
+          </p>
         </footer>
       </div>
     </div>
