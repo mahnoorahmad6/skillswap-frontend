@@ -33,7 +33,7 @@ function Navbar() {
             {user ? (
               /* --- Authenticated View --- */
               <div className="nav-user-controls">
-                <Link to={`/user/${user.email}`} className="nav-profile-pill">
+                <Link to={'/profile'} className="nav-profile-pill">
                   <div className="nav-avatar-sm">{user.name.charAt(0)}</div>
                   <span>{user.name}</span>
                 </Link>

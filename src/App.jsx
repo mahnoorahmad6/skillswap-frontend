@@ -8,8 +8,21 @@ import Navbar from "./components/Navbar";
 import Search from "./pages/Search";
 import UserProfile from "./pages/UserProfile";
 import About from "./pages/About";
+import { loadUser } from "./features/user/userSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 function App() {
+   const dispatch = useDispatch();
+   useEffect(() => {
+   
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      dispatch(loadUser());
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
