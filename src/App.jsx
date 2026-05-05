@@ -13,14 +13,10 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 function App() {
-   const dispatch = useDispatch();
-   useEffect(() => {
-   
-    const token = localStorage.getItem("token");
+    const dispatch = useDispatch();
 
-    if (token) {
-      dispatch(loadUser());
-    }
+  useEffect(() => {
+    dispatch(loadUser()); // ← reloads full user with skills on every refresh
   }, []);
 
   return (
@@ -32,7 +28,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/" element={<Dashboard />} />
-          <Route path="/user/:email" element={<UserProfile />} />
+          <Route path="/user/:id" element={<UserProfile />} />
           <Route path="/search" element={<Search />} />
       </Routes>
     </BrowserRouter>

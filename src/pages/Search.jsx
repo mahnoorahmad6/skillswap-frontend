@@ -1,47 +1,59 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Search.css"; // The new CSS file
+import axios from "axios";
+import "./Search.css";
 
 function Search() {
-  const users = useSelector((state) => state.user.users) || [];
-  const currentUser = useSelector((state) => state.user?.currentUser); 
+  const currentUser = useSelector((state) => state.user?.currentUser);
   const [query, setQuery] = useState("");
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
+  // 🔥 Fetch matches from backend
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          `http://localhost:5000/api/user/matches?search=${query}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error fetching matches:", err);
+      }
+    };
+
+    if (currentUser) {
+      fetchMatches();
+    }
+  }, [query, currentUser]);
+
+  // 🔒 Not logged in
   if (!currentUser) {
     return (
       <div className="dashboard-container text-center">
-        <p className="auth-alert">Please log in to search for skill swaps.</p>
+        <p className="auth-alert">
+          Please log in to search for skill swaps.
+        </p>
       </div>
     );
   }
-
-  const filteredUsers = users.filter((user) => {
-    if (user.email === currentUser.email) return false;
-
-    const mutual =
-      currentUser.learnSkills?.some((skill) =>
-        user.teachSkills?.includes(skill)
-      ) &&
-      currentUser.teachSkills?.some((skill) =>
-        user.learnSkills?.includes(skill)
-      );
-
-    const search = query.toLowerCase();
-    const matchesQuery =
-      user.teachSkills?.concat(user.learnSkills || []).some((skill) =>
-        skill.toLowerCase().includes(search)
-      );
-
-    return mutual && matchesQuery;
-  });
 
   return (
     <div className="dashboard-container">
       <header className="search-header">
         <h1 className="dashboard-title">Find Your Match</h1>
-        <p className="user-welcome">We've found people who want what you have and have what you want.</p>
+        <p className="user-welcome">
+          We've found people who want what you have and have what you want.
+        </p>
       </header>
 
       <div className="search-input-wrapper">
@@ -56,31 +68,39 @@ function Search() {
       </div>
 
       <div className="results-container">
-        {filteredUsers.length === 0 ? (
+        {users.length === 0 ? (
           <div className="empty-state">
-            <p>No matching users found for your current skills.</p>
+            <p>No matching users found.</p>
           </div>
         ) : (
-          filteredUsers.map((user) => (
+          users.map((user) => (
             <div
-              key={user.email}
-              onClick={() => navigate(`/user/${user.email}`)}
+              key={user._id}
+              onClick={() => navigate(`/user/${user._id}`)}
               className="user-result-card"
             >
               <div className="user-info">
-                <div className="user-avatar">{user.name.charAt(0)}</div>
+                <div className="user-avatar">
+                  {user.name.charAt(0)}
+                </div>
+
                 <div className="user-details">
                   <h2 className="user-name-text">{user.name}</h2>
+
                   <div className="skill-badges">
                     <div className="badge teach">
-                      <strong>Teaches:</strong> {user.teachSkills.join(", ")}
+                      <strong>Teaches:</strong>{" "}
+                      {user.teachSkills?.map(s => s.name).join(", ")}
                     </div>
+
                     <div className="badge learn">
-                      <strong>Needs:</strong> {user.learnSkills.join(", ")}
+                      <strong>Needs:</strong>{" "}
+                      {user.learnSkills?.map(s => s.name).join(", ")}
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="arrow-indicator">→</div>
             </div>
           ))

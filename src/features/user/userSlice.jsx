@@ -56,12 +56,10 @@ export const logoutUser = createAsyncThunk(
   "user/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API}/auth/logout`);
-      return res.data;
+      localStorage.removeItem("token");
+      return true;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Logout failed"
-      );
+      return rejectWithValue("Logout failed");
     }
   }
 );
@@ -329,9 +327,12 @@ const userSlice = createSlice({
       .addCase(sendRequest.pending, (state) => {
         state.loading = true;
       })
-      .addCase(sendRequest.fulfilled, (state) => {
-        state.loading = false;
-      })
+      .addCase(sendRequest.fulfilled, (state, action) => {
+  state.loading = false;
+  if (action.payload.user) {
+    state.currentUser = action.payload.user;
+  }
+})
       .addCase(sendRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
