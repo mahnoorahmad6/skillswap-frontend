@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTeachSkill,
@@ -13,6 +14,8 @@ import "./Profile.css";
 function Profile() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
+
 
   const [teachInput, setTeachInput] = useState("");
   const [learnInput, setLearnInput] = useState("");
@@ -163,14 +166,15 @@ function Profile() {
               {connections.length === 0 ? (
                 <p className="empty-text">No connections yet</p>
               ) : (
-                connections.map((conn) => (
-                  <li key={conn._id} className="conn-item">
-                    <div className="conn-avatar">
-                      {conn.name?.charAt(0)}
-                    </div>
-                    {conn.name}
-                  </li>
-                ))
+               connections.map((conn) => (
+  <li key={conn._id} className="conn-item">
+    <div className="conn-avatar">{conn.name?.charAt(0)}</div>
+    {conn.name}
+    <button onClick={() => navigate(`/chat/${conn._id}`)}>
+      Chat
+    </button>
+  </li>
+))
               )}
             </ul>
           </div>

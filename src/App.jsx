@@ -11,6 +11,8 @@ import About from "./pages/About";
 import { loadUser } from "./features/user/userSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import Chat from "./pages/Chat";
+
 
 function App() {
     const dispatch = useDispatch();
@@ -30,6 +32,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/user/:id" element={<UserProfile />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/chat/:friendId" element={<Chat />} />
       </Routes>
     </BrowserRouter>
 
