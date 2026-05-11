@@ -64,7 +64,7 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// 🔹 LOAD USER (VERY IMPORTANT)
+// 🔹 LOAD USER
 export const loadUser = createAsyncThunk(
   "user/loadUser",
   async (_, { rejectWithValue }) => {

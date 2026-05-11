@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./pages/profile";
+import Contact from "./pages/Contact";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import ChangePassword from "./pages/ChangePassword";
@@ -25,6 +26,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/profile" element={<Profile />} /> 
+          <Route path="/contact" element={<Contact />} /> 
         <Route path="/about" element={<About />} />
          <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
